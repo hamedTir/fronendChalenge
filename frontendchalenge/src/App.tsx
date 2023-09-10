@@ -3,6 +3,8 @@ import React from 'react';
 import './App.css';
 import UserList from './User/UserList';
 import Person3Icon from '@mui/icons-material/Person3';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   return (
@@ -25,6 +27,7 @@ const App = () => {
 
         <UserList />
       </Container>
+      <ToastContainer />
     </>
 
   );

@@ -1,5 +1,6 @@
 import React, { FormEvent, useEffect, useState } from 'react';
 import Axios from 'axios';
+import { toast } from 'react-toastify';
 import {
     Table,
     TableBody,
@@ -19,8 +20,9 @@ import {
     Select,
     MenuItem,
     TextField,
+    IconButton,
 } from '@mui/material';
-import { CleaningServicesTwoTone } from '@mui/icons-material';
+import { CleaningServicesTwoTone, Delete, Edit, Visibility } from '@mui/icons-material';
 
 interface User {
     id: number;
@@ -50,20 +52,59 @@ const UserList = () => {
 
     };
 
-    const createUser = (event: FormEvent) => {
-        console.log("dataaaa", userData);
+    const createUser = async (event: FormEvent) => {
         event.preventDefault();
-        Axios.post(`${baseUrl}api/users`, userData)
-            .then((response) => {
-                if(response.status == 201) {setIsModalOpen(false)}
-                // Handle successful creation
-                // You can add a success message or reset the form here
-            })
-            .catch((error) => {
-                console.log('error message:', error.message)
-                setIsModalOpen(false)
-            });
+
+        try {
+            const response = await Axios.post(`${baseUrl}api/users`, userData);
+
+            if (response.status === 201) {
+                setIsModalOpen(false);
+                toast.success(`User successfully created`, {
+                    position: "top-right",
+                    autoClose: 3000,
+                });
+            }
+        } catch (error: any) {
+            if (error.response.status === 400) {
+                setIsModalOpen(false);
+                toast.warning(`Email is already taken`, {
+                    position: "top-right",
+                    autoClose: 3000,
+                });
+            }
+            else {
+
+                toast.error(`User could not be created`, {
+                    position: "top-right",
+                    autoClose: 3000,
+                });
+            }
+
+            setIsModalOpen(false);
+        }
     };
+
+    const handleDeleteUser = (userId: number) => {
+        try {
+
+            Axios.delete(`${baseUrl}api/users/${userId}`);
+            setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+            toast.success(`User successfully deleted.`, {
+                position: "top-right",
+                autoClose: 3000,
+            });
+
+        } catch (error) {
+            toast.error(`User with ID ${userId} could not deleted.`, {
+                position: "top-right",
+                autoClose: 3000,
+            });
+            console.error(`Error deleting user with ID ${userId}:`, error);
+        }
+    };
+
+
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -84,13 +125,15 @@ const UserList = () => {
             });
     }, [isModalOpen]);
 
+
+
     return (
         <>
 
             <Button style={{ marginBottom: '15px' }} variant="outlined" color="primary" onClick={openModal}>
                 Create New User
             </Button>
-            <TableContainer component={Paper}>
+            <TableContainer style={{ width: '700px' }} component={Paper}>
 
                 <Table>
                     <TableHead>
@@ -100,6 +143,7 @@ const UserList = () => {
                             <TableCell>Email</TableCell>
                             <TableCell>Age</TableCell>
                             <TableCell>Website</TableCell>
+                            <TableCell>Action</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -110,6 +154,18 @@ const UserList = () => {
                                 <TableCell>{user.email}</TableCell>
                                 <TableCell>{user.age}</TableCell>
                                 <TableCell>{user.website}</TableCell>
+                                <TableCell>
+                                    {/* Icons for viewing, editing, and deleting users */}
+                                    <IconButton color="primary">
+                                        <Visibility />
+                                    </IconButton>
+                                    <IconButton color="primary">
+                                        <Edit />
+                                    </IconButton>
+                                    <IconButton onClick={() => handleDeleteUser(user.id)} color="secondary">
+                                        <Delete />
+                                    </IconButton>
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
