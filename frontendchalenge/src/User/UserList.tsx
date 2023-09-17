@@ -65,12 +65,12 @@ const UserList = () => {
     };
 
 
-    const updateUser = async () => {
+    const updateUser = async (event: FormEvent) => {
+        event.preventDefault();
         try {
-            console.log("edittting", editingUser);
             const response = await Axios.put(`${baseUrl}api/users/${editingUser?.id}`, editingUser);
 
-            if (response.status === 200) {
+            if (response.status === 204) {
                 // setEditIsModalOpen(false);
                 toast.success(`User successfully updated`, {
                     position: "top-right",
@@ -83,7 +83,6 @@ const UserList = () => {
                 position: "top-right",
                 autoClose: 3000,
             });
-            console.error(`Error updating user:`, error);
         }
     };
 

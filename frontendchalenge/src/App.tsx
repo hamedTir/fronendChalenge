@@ -6,27 +6,37 @@ import Person3Icon from '@mui/icons-material/Person3';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Outlet } from 'react-router-dom';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import darkTheme from './darkTheme'; // Import your dark theme
+import { Link } from 'react-router-dom';
 
 const App = () => {
   return (
     <>
-      <Box>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <Avatar>
-            <Person3Icon />
-          </Avatar>
-          <Typography style={{ marginLeft: '4px', marginTop: '7px' }} variant="h4" gutterBottom>
-            Users And Notes Management
-          </Typography>
-        </div>
-      </Box>
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
+        <Box>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <Link to={"/"}>
 
-   
-      <Container maxWidth="sm">
+              <Avatar>
+                <Person3Icon />
+              </Avatar>
+            </Link>
+            <Typography style={{ marginLeft: '4px', marginTop: '7px' }} variant="h4" gutterBottom>
+              Users And Notes Management
+            </Typography>
+          </div>
+        </Box>
 
-        <Outlet />
-      </Container>
-      <ToastContainer />
+
+        <Container >
+
+          <Outlet />
+        </Container>
+        <ToastContainer />
+      </ThemeProvider>
     </>
 
   );
