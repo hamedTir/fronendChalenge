@@ -21,8 +21,13 @@ import {
     MenuItem,
     TextField,
     IconButton,
+    Divider,
+    Chip
 } from '@mui/material';
 import { CleaningServicesTwoTone, Delete, Edit, Visibility } from '@mui/icons-material';
+import ViewUser from './ViewUser';
+import { Link } from 'react-router-dom';
+
 
 interface User {
     id: number;
@@ -37,6 +42,10 @@ const UserList = () => {
     const baseUrl = 'http://localhost:5102/';
     const [users, setUsers] = useState<User[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isEditModalOpen, setEditIsModalOpen] = useState(false);
+    const [isViewingModalOpen, setViewingIsModalOpen] = useState(false);
+    const [viewId, setViewId] = useState<number>(0);
+    const [editingUser, setEditingUser] = useState<User | null>(null);
     const [userData, setUserData] = useState<User>({
         id: 0,
         firstName: '',
@@ -45,6 +54,38 @@ const UserList = () => {
         age: Number.NaN,
         website: '',
     });
+
+    const openEditModal = (user: User) => {
+        setEditingUser(user);
+        setEditIsModalOpen(true);
+    };
+
+    const closeEditModal = () => {
+        setEditIsModalOpen(false);
+    };
+
+
+    const updateUser = async () => {
+        try {
+            console.log("edittting", editingUser);
+            const response = await Axios.put(`${baseUrl}api/users/${editingUser?.id}`, editingUser);
+
+            if (response.status === 200) {
+                // setEditIsModalOpen(false);
+                toast.success(`User successfully updated`, {
+                    position: "top-right",
+                    autoClose: 3000,
+                });
+                setEditingUser(null); // Clear the editingUser state
+            }
+        } catch (error) {
+            toast.error(`User could not be updated`, {
+                position: "top-right",
+                autoClose: 3000,
+            });
+            console.error(`Error updating user:`, error);
+        }
+    };
 
     const handleInputChange = (event: { target: { name: any; value: any; }; }) => {
         const { name, value } = event.target;
@@ -114,6 +155,10 @@ const UserList = () => {
         setIsModalOpen(false);
     };
 
+
+
+
+
     useEffect(() => {
         Axios.get(`${baseUrl}api/users`)
             .then((response) => {
@@ -129,7 +174,9 @@ const UserList = () => {
 
     return (
         <>
-
+            <Divider style={{ marginBottom: '15px' }}>
+                <Chip label="USERSLIST" />
+            </Divider>
             <Button style={{ marginBottom: '15px' }} variant="outlined" color="primary" onClick={openModal}>
                 Create New User
             </Button>
@@ -156,11 +203,14 @@ const UserList = () => {
                                 <TableCell>{user.website}</TableCell>
                                 <TableCell>
                                     {/* Icons for viewing, editing, and deleting users */}
+                                    <Link to={`/user/${user.id}`}>
+
+                                        <IconButton color="primary">
+                                            <Visibility />
+                                        </IconButton>
+                                    </Link>
                                     <IconButton color="primary">
-                                        <Visibility />
-                                    </IconButton>
-                                    <IconButton color="primary">
-                                        <Edit />
+                                        <Edit onClick={() => openEditModal(user)} />
                                     </IconButton>
                                     <IconButton onClick={() => handleDeleteUser(user.id)} color="secondary">
                                         <Delete />
@@ -171,7 +221,7 @@ const UserList = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
-
+            {/* for creating user */}
             <Dialog open={isModalOpen} onClose={closeModal}>
                 <DialogTitle>Create New User</DialogTitle>
                 <DialogContent>
@@ -232,6 +282,70 @@ const UserList = () => {
                     </form>
                 </DialogContent>
 
+            </Dialog>
+
+            {/* for editing user */}
+            <Dialog open={isEditModalOpen} onClose={closeEditModal}>
+                <DialogTitle>Edit User</DialogTitle>
+                <DialogContent>
+                    {editingUser && (
+                        <form onSubmit={updateUser}>
+                            {/* Render user data in the form */}
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                label="First Name"
+                                type="text"
+                                name="firstName"
+                                required
+                                value={editingUser.firstName}
+                                onChange={(e) => setEditingUser({ ...editingUser, firstName: e.target.value })}
+                                fullWidth
+                            />
+                            <TextField
+                                margin="dense"
+                                label="Last Name"
+                                type="text"
+                                name="lastName"
+                                value={editingUser.lastName}
+                                onChange={(e) => setEditingUser({ ...editingUser, lastName: e.target.value })}
+                                fullWidth
+                            />
+                            <TextField
+                                margin="dense"
+                                label="Email"
+                                type="email"
+                                name="email"
+                                value={editingUser.email}
+                                onChange={(e) => setEditingUser({ ...editingUser, email: e.target.value })}
+                                fullWidth
+                                required
+                            />
+                            <TextField
+                                margin="dense"
+                                label="Age"
+                                type="number"
+                                name="age"
+                                value={editingUser.age}
+                                onChange={(e) => setEditingUser({ ...editingUser, age: parseInt(e.target.value, 10) })}
+                                fullWidth
+                                required
+                            />
+                            <TextField
+                                margin="dense"
+                                label="Website"
+                                type="text"
+                                name="website"
+                                value={editingUser.website}
+                                onChange={(e) => setEditingUser({ ...editingUser, website: e.target.value })}
+                                fullWidth
+                            />
+                            <Button type="submit" variant="contained" color="primary">
+                                Update
+                            </Button>
+                        </form>
+                    )}
+                </DialogContent>
             </Dialog>
         </>
 
