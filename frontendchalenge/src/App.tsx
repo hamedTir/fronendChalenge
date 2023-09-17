@@ -1,4 +1,4 @@
-import { Divider, Chip, Avatar, Container, Typography, Box } from '@mui/material';
+import { Divider, Chip, Avatar, Container, Typography, Box, BottomNavigation, BottomNavigationAction } from '@mui/material';
 import React from 'react';
 import './App.css';
 import UserList from './User/UserList';
@@ -10,28 +10,37 @@ import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import darkTheme from './darkTheme'; // Import your dark theme
 import { Link } from 'react-router-dom';
+import HomeIcon from '@mui/icons-material/Home';
+import MonitorIcon from '@mui/icons-material/Monitor';
 
 const App = () => {
+  const [value, setValue] = React.useState(0);
+
   return (
     <>
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
-        <Box>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <Link to={"/"}>
 
-              <Avatar>
-                <Person3Icon />
-              </Avatar>
-            </Link>
-            <Typography style={{ marginLeft: '4px', marginTop: '7px' }} variant="h4" gutterBottom>
-              Users And Notes Management
-            </Typography>
-          </div>
-        </Box>
+        <BottomNavigation
+
+          showLabels
+          value={value}
+          onChange={(event, newValue) => {
+            setValue(newValue);
+          }}
+          style={{ display: 'flex', justifyContent: 'flex-start', marginLeft: "350px" }}
+        >
 
 
-        <Container >
+          <BottomNavigationAction label="Home" icon={<Link to={"/"}><HomeIcon />            </Link>
+          } />
+          <BottomNavigationAction label="Monitroring" icon={<MonitorIcon />} />
+        </BottomNavigation>
+
+        <Container maxWidth={"sm"} >
+
+
+
 
           <Outlet />
         </Container>

@@ -348,6 +348,7 @@ const ViewUser = () => {
 export default ViewUser;
 
 function formatDate(dateTimeString: string): string {
+  if(dateTimeString == "")return "";
   const date = new Date(dateTimeString);
   const options: Intl.DateTimeFormatOptions = {
     year: 'numeric',

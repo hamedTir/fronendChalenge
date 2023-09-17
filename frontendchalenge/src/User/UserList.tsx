@@ -173,8 +173,7 @@ const UserList = () => {
 
     return (
         <>
-            <Divider style={{ marginBottom: '15px' }}>
-                <Chip label="USERSLIST" />
+            <Divider textAlign="left" style={{ marginBottom: '15px' }} variant='middle' >
             </Divider>
             <Button style={{ marginBottom: '15px' }} variant="outlined" color="primary" onClick={openModal}>
                 Create New User
