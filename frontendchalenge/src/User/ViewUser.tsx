@@ -236,7 +236,7 @@ const ViewUser = () => {
                     {note.content}
                   </Typography>
                   <Typography variant="caption" color="textSecondary">
-                    Date Created: {note.dateCreated}
+                    Date Created: {formatDate(note.dateCreated)}
                   </Typography>
                 </CardContent>
               </Card>
@@ -298,7 +298,7 @@ const ViewUser = () => {
               label="Date Created"
               name="dateCreated"
               required
-              value={editedNote.dateCreated}
+              value={formatDate(editedNote.dateCreated)}
               disabled
             />
             <TextField
@@ -307,7 +307,7 @@ const ViewUser = () => {
               label="Date Modified"
               name="dateModified"
               required
-              value={editedNote.dateModified}
+              value={formatDate(editedNote.dateModified)}
               disabled
             />
             <TextField
@@ -346,3 +346,18 @@ const ViewUser = () => {
 };
 
 export default ViewUser;
+
+function formatDate(dateTimeString: string): string {
+  const date = new Date(dateTimeString);
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    timeZoneName: 'short',
+  };
+
+  return new Intl.DateTimeFormat('en-US', options).format(date);
+}
