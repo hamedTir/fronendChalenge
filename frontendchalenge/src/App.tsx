@@ -10,7 +10,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import darkTheme from './darkTheme'; // Import your dark theme
 import { Link } from 'react-router-dom';
-import HomeIcon from '@mui/icons-material/Home';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import MonitorIcon from '@mui/icons-material/Monitor';
 
 const App = () => {
@@ -32,9 +32,11 @@ const App = () => {
         >
 
 
-          <BottomNavigationAction label="Home" icon={<Link to={"/"}><HomeIcon />            </Link>
-          } />
-          <BottomNavigationAction label="Monitroring" icon={<MonitorIcon />} />
+          <BottomNavigationAction label="Home" icon={<Link to={"/"}><HomeOutlinedIcon/> 
+           </Link> } />
+          <BottomNavigationAction label="Monitroring" icon={<Link to={"/user/monitor"}>
+            <MonitorIcon />
+          </Link>} />
         </BottomNavigation>
 
         <Container maxWidth={"sm"} >

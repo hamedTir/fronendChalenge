@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import UserList from './User/UserList';
 import ViewUser from './User/ViewUser';
+import UserHub from './Hub/UserHub';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -17,6 +18,7 @@ root.render(
         <Route path="/" element={<App />} >
           <Route index element={<UserList />} />
           <Route path="/user/:id" element={<ViewUser />} />
+          <Route path="/user/monitor" element={<UserHub />} />
         </Route >
         </Routes>
     </BrowserRouter>
